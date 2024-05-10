@@ -9,7 +9,7 @@ const Todo = ({todos}: TodoProps) => {
     return (
         <li className="p-2 my-2 uppercase bg-teal-300 rounded-md shadow-sm">
             <div className='flex items-center justify-between'>
-                <p>{todos} </p>
+                <p>{todos.text} </p>
                     <div className='flex gap-3'>
                         <button>
                             <CheckIcon/>

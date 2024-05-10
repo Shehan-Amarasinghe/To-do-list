@@ -1,10 +1,33 @@
 import Form from "./Components/Form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Todo from "./Components/Todo";
+import { QuerySnapshot, collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "./Components/Firebase";
 
 const App = () => {
   
-  const [todo, setTodo] = useState(["Code ", "Code more"]);
+  const [todo, setTodo] = useState([""]);
+
+  // Create Todo
+  
+  // Read Todo
+  useEffect(()=>{
+    const q = query(collection(db, "todos"))
+    const unsub = onSnapshot(q,
+      (QuerySnapshot)=>{
+        const todosArr = []
+        QuerySnapshot.forEach((doc) =>{
+          todosArr.push({...doc.data(), id: doc.
+          id});
+        });
+        setTodo(todosArr);
+      });
+      return ()=> unsub;
+  }, []);
+  
+  // Update Todo
+
+  // Delete Todo
   
   return (
   <div className="w-screen h-screen p-4 bg-teal-300">

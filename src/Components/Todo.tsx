@@ -1,11 +1,13 @@
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { TodoType } from '../types';
 
 interface TodoProps{
-    todos: string;
+    todos: TodoType;
+    deleteTodo: (id:string)=> void
 }
 
-const Todo = ({todos}: TodoProps) => {
+const Todo = ({todos, deleteTodo}:TodoProps) => {
     return (
         <li className="p-2 my-2 uppercase bg-teal-300 rounded-md shadow-sm">
             <div className='flex items-center justify-between'>
@@ -14,7 +16,7 @@ const Todo = ({todos}: TodoProps) => {
                         <button>
                             <CheckIcon/>
                         </button>
-                        <button>
+                        <button onClick={()=> deleteTodo(todos.id)}>
                             <DeleteIcon/>
                         </button>
                     </div>  

@@ -1,7 +1,7 @@
 import Form from "./Components/Form";
 import { useEffect, useState } from "react";
 import Todo from "./Components/Todo";
-import { QuerySnapshot, collection, onSnapshot, query } from "firebase/firestore";
+import { QuerySnapshot, collection, deleteDoc, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "./Components/Firebase";
 
 const App = () => {
@@ -28,6 +28,9 @@ const App = () => {
   // Update Todo
 
   // Delete Todo
+  const deleteTodo= async (id:string) => {
+    await deleteDoc(doc(db, "todos", id));
+  };
   
   return (
   <div className="w-screen h-screen p-4 bg-teal-300">
@@ -36,7 +39,7 @@ const App = () => {
        <Form/>
        <ul>
         {todo.map((todos, index) => (
-          <Todo key={index} todos={todos}/>
+          <Todo key={index} todos={todos} deleteTodo={deleteTodo}/>
         ))}
        </ul>
         <p className="text-center">You have 2 things to complete</p>

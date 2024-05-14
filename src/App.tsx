@@ -56,6 +56,7 @@ const App = () => {
         ))}
        </ul>
         <p className="text-center">You have 2 things to complete</p>
+          <p>this</p>
     </div>
   </div>
   );

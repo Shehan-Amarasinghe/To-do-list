@@ -1,16 +1,22 @@
 import Form from "./Components/Form";
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import Todo from "./Components/Todo";
-import { QuerySnapshot, addDoc, collection, deleteDoc, doc, onSnapshot, query } from "firebase/firestore";
+import { QuerySnapshot, addDoc, collection, deleteDoc, doc, onSnapshot, query, updateDoc } from "firebase/firestore";
 import { db } from "./Components/Firebase";
+
+interface TodoType {
+  text? : string
+  completed? : boolean
+  id : string
+}
 
 const App = () => {
   
-  const [todo, setTodo] = useState([]);
+  const [todo, setTodo] = useState<TodoType[]>([]);
   const [input, setInput] = useState('')
 
   // Create Todo
-  const createTodo = async (e) => {
+  const createTodo : FormEventHandler<HTMLInputElement> = async (e) => {
     e.preventDefault()
     if (input === ''){
       alert("Please enter some task")
@@ -28,17 +34,22 @@ const App = () => {
     const q = query(collection(db, "todos"))
     const unsub = onSnapshot(q,
       (QuerySnapshot)=>{
-        const todosArr = []
+        const todosArr : TodoType[] = [];
         QuerySnapshot.forEach((doc) =>{
           todosArr.push({...doc.data(), id: doc.
           id});
         });
         setTodo(todosArr);
       });
-      return ()=> unsub;
+      return ()=> unsub();
   }, []);
   
   // Update Todo
+  const toggleComplete = async(todo: TodoType) => {
+    await updateDoc(doc(db, "todos", todo.id), {
+     completed: !todo.completed,
+    });
+  };
 
   // Delete Todo
   const deleteTodo= async (id:string) => {
@@ -52,11 +63,10 @@ const App = () => {
        <Form createTodo={createTodo} input={input} setInput={setInput}/>
        <ul>
         {todo.map((todos, index) => (
-          <Todo key={index} todos={todos} deleteTodo={deleteTodo}/>
+          <Todo key={index} todos={todos} deleteTodo={deleteTodo} toggleComplete={toggleComplete} />
         ))}
        </ul>
-        <p className="text-center">You have 2 things to complete</p>
-          <p>this</p>
+        {todo.length > 0 ? <p className="text-center">{`You have ${todo.length} task`}</p> : null}
     </div>
   </div>
   );
